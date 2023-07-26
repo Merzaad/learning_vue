@@ -2,6 +2,7 @@
 import ButtonC from '@/components/ButtonC.vue'
 import BoxC from '@/components/BoxC.vue'
 import { reactive, ref, computed } from 'vue'
+import ComponentC from '@/components/ComponentC.vue'
 let id = 0
 const initialList = [
   { id: id++, a: 'o' },
@@ -20,13 +21,13 @@ const increase2 = () => {
   refState.value++
 }
 const input = ref('')
+const componentEmit = ref('')
 const onInputChange = (e: any) => {
   input.value = e.target.value
 }
 const toggle = ref(false)
 const array = ref([1, 2])
 const object = ref<any>({ a: 1 })
-
 const updateArrayWithDelay = () => {
   setTimeout(() => {
     array.value.push(1)
@@ -63,7 +64,8 @@ const listLength = computed(() => list.value.length)
       <ButtonC @click="updateObjectWithDelay">delay</ButtonC>
     </BoxC>
     <BoxC>
-      {{ input }}
+      {{ componentEmit }}
+      <ComponentC :text="input" @text-back="(text) => (componentEmit = text)" />
       <input :value="input" @input="onInputChange" />
     </BoxC>
     <BoxC>
