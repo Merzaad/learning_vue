@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import ButtonC from '@/components/ButtonC.vue'
 import BoxC from '@/components/BoxC.vue'
-import { reactive, ref, computed } from 'vue'
+import { reactive, ref, computed, watch } from 'vue'
 import ComponentC from '@/components/ComponentC.vue'
 let id = 0
 const initialList = [
@@ -27,7 +27,7 @@ const onInputChange = (e: any) => {
 }
 const toggle = ref(false)
 const array = ref([1, 2])
-const object = ref<any>({ a: 1 })
+const object = ref<any>({ a: 1, b: { x: 1 } })
 const updateArrayWithDelay = () => {
   setTimeout(() => {
     array.value.push(1)
@@ -39,6 +39,33 @@ const updateObjectWithDelay = () => {
   }, 1500)
 }
 const listLength = computed(() => list.value.length)
+watch(object, (newValue, oldValue) => {
+  console.log('object', oldValue, newValue)
+})
+watch(
+  () => object.value.a,
+  (newValue, oldValue) => {
+    console.log('() => object.value.a', oldValue, newValue)
+  }
+)
+watch(
+  () => object.value.b.x,
+  (newValue, oldValue) => {
+    console.log('() => object.value.b.x', oldValue, newValue)
+  }
+)
+watch(
+  () => reactiveState.value,
+  (newValue, oldValue) => {
+    console.log('reactiveState.value', oldValue, newValue)
+  }
+)
+watch(reactiveState, (newValue, oldValue) => {
+  console.log('reactiveState', oldValue, newValue)
+})
+watch(refState, (newValue, oldValue) => {
+  console.log('refState', oldValue, newValue)
+})
 </script>
 
 <template>
@@ -59,8 +86,10 @@ const listLength = computed(() => list.value.length)
     </BoxC>
     <BoxC>
       {{ object }}
-      <ButtonC @click="object.a++">object.b</ButtonC>
+      <ButtonC @click="object.a++">object.a++</ButtonC>
       <ButtonC @click="object = { ...object, b: 1 }">{...object}</ButtonC>
+      <ButtonC @click="object.b.x++">object.b.x++</ButtonC>
+
       <ButtonC @click="updateObjectWithDelay">delay</ButtonC>
     </BoxC>
     <BoxC>
